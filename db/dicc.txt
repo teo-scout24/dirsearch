@@ -457,6 +457,8 @@
 .viminfo
 .vimrc
 .web
+.well-known/
+.well-known/security.txt
 .workspace/
 .wp-config.php.swp
 .www_acl
@@ -576,6 +578,12 @@
 2018.tar.gz
 2018.tgz
 2018.zip
+2019
+2019.sql
+2019.tar
+2019.tar.gz
+2019.tgz
+2019.zip
 21
 22
 2257.%EXT%
@@ -870,6 +878,11 @@ activation.%EXT%
 ActiveDirectoryRemoteAdminScripts/
 activity.log
 activitysessions/docs/
+actuator
+actuator/dump
+actuator/trace
+actuator/logfile
+actuator/mappings
 ad
 ad_admin.%EXT%
 ad_login
@@ -2084,6 +2097,7 @@ bea_wls_internal/psquare/x.jsp
 bea_wls_internal/WebServiceServlet
 bea_wls_internal/WLDummyInitJVMIDs
 beanManaged
+beans
 BeenThere
 behat.yml
 beheer/
@@ -2201,6 +2215,7 @@ c22.php
 c99.php
 c99shell.php
 cache
+caches
 cache/
 cache/sql_error_latest.cgi
 cache_html
@@ -2932,6 +2947,7 @@ english
 enteradmin
 enterprise
 entertainment
+env
 environment.rb
 epsadmin
 err
@@ -3252,6 +3268,7 @@ header
 header_admin.%EXT%
 headers
 health
+heapdump
 heip65_admin.nsf
 hello
 helloEJB
@@ -3614,7 +3631,13 @@ joomla.rar
 joomla.xml
 joomla.zip
 joomla/administrator
+jolokia
+jolokia/list
 js
+js/envConfig.js
+js/prod.js
+js/prepod.js
+js/qa.js
 js/elfinder/elfinder.php
 js/FCKeditor
 js/routing
@@ -3943,6 +3966,7 @@ manager/html/
 manager/login
 manager/login.asp
 manager/VERSION
+manifest.json
 MANIFEST.MF
 manifest.mf
 manual
@@ -3956,6 +3980,7 @@ mapadmin
 mapix/doc/en/changes.html
 mapix/mapix/doc/en/changes.html
 mapping
+mappings
 maps
 market
 master-admin
@@ -4989,6 +5014,7 @@ securecleanup
 secured
 secureemail
 security
+security.txt
 security.xml
 security/
 Security/login/
@@ -5645,6 +5671,7 @@ tradetheme
 training
 trans
 transfer
+trace
 travel
 trivia/
 tst
@@ -5818,6 +5845,17 @@ version/
 VERSIONS.html
 VERSIONS.md
 VERSIONS.txt
+vendor/composer/installed.json
+vendor/autoload.php
+vendor/composer/autoload_classmap.php
+vendor/composer/autoload_files.php
+vendor/composer/autoload_namespaces.php
+vendor/composer/autoload_psr4.php
+vendor/composer/autoload_real.php
+vendor/composer/autoload_static.php
+vendor/composer/ClassLoader.php
+vendor/composer/installed.json
+vendor/composer/LICENSE
 view-source
 view.php
 vmailadmin/
@@ -5932,6 +5970,7 @@ WLDummyInitJVMIDs
 Wordpress/
 WordPress/
 WP
+wp
 wp-admin
 wp-admin/
 wp-admin/c99.php

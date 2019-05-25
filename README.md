@@ -54,6 +54,7 @@ Contributors
 ---------
 Special thanks for these people.
 
+- Damian89
 - Bo0oM
 - liamosaur
 - redshark1802

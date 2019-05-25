@@ -20,6 +20,7 @@ import gc
 import os
 import sys
 import time
+import urllib.parse
 from threading import Lock
 
 from queue import Queue
@@ -55,6 +56,15 @@ class Controller(object):
         self.arguments = arguments
         self.output = output
         self.savePath = self.script_path
+        self.doneDirs = []
+
+        self.recursive_level_max = self.arguments.recursive_level_max
+
+        if self.arguments.httpmethod.lower() not in ["get", "head", "post"]:
+            self.output.error("Inavlid http method!")
+            exit(1)
+
+        self.httpmethod = self.arguments.httpmethod.lower()
 
         if self.arguments.saveHome:
             savePath = self.getSavePath()
@@ -126,7 +136,8 @@ class Controller(object):
                                                    timeout=self.arguments.timeout,
                                                    ip=self.arguments.ip, proxy=self.arguments.proxy,
                                                    redirect=self.arguments.redirect,
-                                                   requestByHostname=self.arguments.requestByHostname)
+                                                   requestByHostname=self.arguments.requestByHostname,
+                                                   httpmethod=self.httpmethod)
                         self.requester.request("/")
 
                     except RequestException as e:
@@ -183,8 +194,14 @@ class Controller(object):
         self.output.warning('\nTask Completed')
 
     def printConfig(self):
-        self.output.config(', '.join(self.arguments.extensions), str(self.arguments.threadsCount),
-                           str(len(self.dictionary)))
+        self.output.config(
+            ', '.join(self.arguments.extensions),
+            str(self.arguments.threadsCount),
+            str(len(self.dictionary)),
+            str(self.httpmethod),
+            self.recursive,
+            str(self.recursive_level_max)
+        )
 
     def getSavePath(self):
         basePath = None
@@ -318,7 +335,10 @@ class Controller(object):
                 path.status)) and not (
                     self.suppressEmpty and (len(path.response.body) == 0)):
                 self.output.statusReport(path.path, path.response)
-                self.addDirectory(path.path)
+                if path.response.redirect:
+                    self.addRedirectDirectory(path)
+                else:
+                    self.addDirectory(path.path)
                 self.reportManager.addPath(self.currentDirectory + path.path, path.status, path.response)
                 self.reportManager.save()
                 del path
@@ -409,8 +429,44 @@ class Controller(object):
             if path in [directory + '/' for directory in self.excludeSubdirs]:
                 return False
 
-            self.directories.put(self.currentDirectory + path)
+            dir = self.currentDirectory + path
+
+            if dir in self.doneDirs:
+                return False
+
+            if dir.count("/") > self.recursive_level_max:
+                return False
+
+            self.directories.put(dir)
+
+            self.doneDirs.append(dir)
+
             return True
 
         else:
             return False
+
+    def addRedirectDirectory(self, path):
+        """Resolve the redirect header relative to the current URL and add the
+        path to self.directories if it is a subdirectory of the current URL."""
+        if not self.recursive:
+            return False
+
+        baseUrl = self.currentUrl.rstrip("/") + "/" + self.currentDirectory
+        absoluteUrl = urllib.parse.urljoin(baseUrl, path.response.redirect)
+        if absoluteUrl.startswith(baseUrl) and absoluteUrl != baseUrl and absoluteUrl.endswith("/"):
+            dir = absoluteUrl[len(baseUrl):]
+
+            if dir in self.doneDirs:
+                return False
+
+            if dir.count("/") > self.recursive_level_max:
+                return False
+
+            self.directories.put(dir)
+
+            self.doneDirs.append(dir)
+
+            return True
+
+        return False
